@@ -1,8 +1,9 @@
+// Import necessary data and constants from data.js
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 
 // Initialize page number and matches array
 let page = 1;
-let matches = books;
+let matches = books; // Initially, all books are considered matches
 
 // Function to get DOM elements
 const getElement = (selector) => document.querySelector(selector);
@@ -27,10 +28,7 @@ const createBookPreviews = (books, container) => {
 };
 
 // Function to create and append options to a select element
-const createOptions =
-
-
-(options, defaultOption, container) => {
+const createOptions = (options, defaultOption, container) => {
   const fragment = document.createDocumentFragment();
   const firstOption = document.createElement("option");
   firstOption.value = "any";
@@ -82,6 +80,7 @@ const openOverlay = (selector, focusSelector = null) => {
   if (focusSelector) getElement(focusSelector).focus();
 };
 
+// Function to filter books based on search criteria
 const applySearchFilters = (filters) => {
   return books.filter((book) => {
     const titleMatch =
@@ -95,13 +94,14 @@ const applySearchFilters = (filters) => {
   });
 };
 
-// Event listener functions
+// Event listeners for overlay close button
 getElement("[data-search-cancel]").addEventListener("click", () =>
   closeOverlay("[data-search-overlay]")
 );
 getElement("[data-settings-cancel]").addEventListener("click", () =>
   closeOverlay("[data-settings-overlay]")
 );
+// Event listeners for header buttons to open overlays
 getElement("[data-header-search]").addEventListener("click", () =>
   openOverlay("[data-search-overlay]", "[data-search-title]")
 );
@@ -112,6 +112,7 @@ getElement("[data-list-close]").addEventListener("click", () =>
   closeOverlay("[data-list-active]")
 );
 
+// Event listener for settings form submission to apply theme
 getElement("[data-settings-form]").addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
@@ -120,6 +121,7 @@ getElement("[data-settings-form]").addEventListener("submit", (event) => {
   closeOverlay("[data-settings-overlay]");
 });
 
+// Event listener for search form submission to filter and display books
 getElement("[data-search-form]").addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
@@ -140,6 +142,7 @@ getElement("[data-search-form]").addEventListener("submit", (event) => {
   closeOverlay("[data-search-overlay]");
 });
 
+// Event listener for "Show more" button to load more books
 getElement("[data-list-button]").addEventListener("click", () => {
   createBookPreviews(
     matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE),
@@ -149,6 +152,7 @@ getElement("[data-list-button]").addEventListener("click", () => {
   updateShowMoreButton();
 });
 
+// Event listener for book item clicks to show book details in overlay
 getElement("[data-list-items]").addEventListener("click", (event) => {
   const pathArray = Array.from(event.composedPath());
   const active = pathArray.find((node) => node?.dataset?.preview);
@@ -167,7 +171,7 @@ getElement("[data-list-items]").addEventListener("click", (event) => {
   }
 });
 
-// Initial setup
+// Initial setup to populate options, apply theme, display books, and update "Show more" button
 createOptions(genres, "All Genres", getElement("[data-search-genres]"));
 createOptions(authors, "All Authors", getElement("[data-search-authors]"));
 applyTheme(
